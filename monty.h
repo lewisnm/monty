@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <math.h>
+#include <string.h>
 #define STACK 0
 #define QUEUE 1
 #define DELIMS " \n\t\a\b"
@@ -63,7 +64,7 @@ void nopf(stack_t **stack, unsigned int no_line);
 void subf(stack_t **stack, unsigned int no_line);
 void divf(stack_t **stack, unsigned int no_line);
 void mulf(stack_t **stack, unsigned int no_line);
-void modf(stack_t **stack, unsigned int no_line);
+void my_modf(stack_t **stack, unsigned int no_line);
 void pchaf(stack_t **stack, unsigned int no_line);
 void pstrf(stack_t **stack, unsigned int no_line);
 void rot1f(stack_t **stack, unsigned int no_line);

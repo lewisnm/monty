@@ -4,7 +4,7 @@ void addf(stack_t **stack, unsigned int no_line);
 void subf(stack_t **stack, unsigned int no_line);
 void divf(stack_t **stack, unsigned int no_line);
 void mulf(stack_t **stack, unsigned int no_line);
-void modf(stack_t **stack, unsigned int no_line);
+void my_modf(stack_t **stack, unsigned int no_line);
 
 /**
  * addf - Adds the top two values of a stack_t linked list.
@@ -96,7 +96,7 @@ void mulf(stack_t **stack, unsigned int no_line)
 }
 
 /**
- * modf - Computes the modulus of the second value from the
+ * my_modf - Computes the modulus of the second value from the
  *             top of a stack_t linked list  by the top value.
  * @stack: A pointer to the top mode node of a stack_t linked list.
  * @no_line: The current working line number of a Monty bytecodes file.
@@ -104,7 +104,7 @@ void mulf(stack_t **stack, unsigned int no_line)
  * Description: The result is stored in the second value node
  *              from the top and the top value is removed.
  */
-void modf(stack_t **stack, unsigned int no_line)
+void my_modf(stack_t **stack, unsigned int no_line)
 {
 	if ((*stack)->next == NULL || (*stack)->next->next == NULL)
 	{

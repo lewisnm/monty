@@ -1,5 +1,4 @@
 #include "monty.h"
-#include <string.h>
 
 void clear_token(void);
 unsigned int tkn_len(void);
@@ -82,7 +81,7 @@ void (*get_op_func(char *opcode))(stack_t**, unsigned int)
 		{"sub", subf},
 		{"div", divf},
 		{"mul", mulf},
-		{"mod", modf},
+		{"mod", my_modf},
 		{"pchar", pchaf},
 		{"pstr", pstrf},
 		{"rotl", rot1f},
@@ -139,7 +138,7 @@ int init_monty(FILE *script_fd)
 		if (op_func == NULL)
 		{
 			clearStack(&stack);
-			exit_status = unknown_op_error(ops_token[0], no_line);
+			exit_status = op_unknown(ops_token[0], no_line);
 			clear_token();
 			break;
 		}
