@@ -1,36 +1,36 @@
 #include "monty.h"
 
-void nopf(stack_t **stack, unsigned int no_line);
-void pchaf(stack_t **stack, unsigned int no_line);
-void pstrf(stack_t **stack, unsigned int no_line);
+void monty_nop(stack_t **stack, unsigned int line_number);
+void monty_pchar(stack_t **stack, unsigned int line_number);
+void monty_pstr(stack_t **stack, unsigned int line_number);
 
 /**
- * nopf - Does absolutely nothing for the Monty opcode 'nop'.
+ * monty_nop - Does absolutely nothing for the Monty opcode 'nop'.
  * @stack: A pointer to the top mode node of a stack_t linked list.
- * @no_line: The current working line number of a Monty bytecodes file.
+ * @line_number: The current working line number of a Monty bytecodes file.
  */
-void nopf(stack_t **stack, unsigned int no_line)
+void monty_nop(stack_t **stack, unsigned int line_number)
 {
 	(void)stack;
-	(void)no_line;
+	(void)line_number;
 }
 
 /**
- * pchaf - Prints the character in the top value
+ * monty_pchar - Prints the character in the top value
  *               node of a stack_t linked list.
  * @stack: A pointer to the top mode node of a stack_t linked list.
- * @no_line: The current working line number of a Monty bytecodes file.
+ * @line_number: The current working line number of a Monty bytecodes file.
  */
-void pchaf(stack_t **stack, unsigned int no_line)
+void monty_pchar(stack_t **stack, unsigned int line_number)
 {
 	if ((*stack)->next == NULL)
 	{
-		append_error(err_pchar(no_line, "stack empty"));
+		set_op_tok_error(pchar_error(line_number, "stack empty"));
 		return;
 	}
 	if ((*stack)->next->n < 0 || (*stack)->next->n > 127)
 	{
-		append_error(err_pchar(no_line,
+		set_op_tok_error(pchar_error(line_number,
 					     "value out of range"));
 		return;
 	}
@@ -39,21 +39,21 @@ void pchaf(stack_t **stack, unsigned int no_line)
 }
 
 /**
- * pstrf - Prints the string contained in a stack_t linked list.
+ * monty_pstr - Prints the string contained in a stack_t linked list.
  * @stack: A pointer to the top mode node of a stack_t linked list.
- * @no_line: The current working line number of a Monty bytecodes file.
+ * @line_number: The current working line number of a Monty bytecodes file.
  */
-void pstrf(stack_t **stack, unsigned int no_line)
+void monty_pstr(stack_t **stack, unsigned int line_number)
 {
-	stack_t *temp = (*stack)->next;
+	stack_t *tmp = (*stack)->next;
 
-	while (temp && temp->n != 0 && (temp->n > 0 && temp->n <= 127))
+	while (tmp && tmp->n != 0 && (tmp->n > 0 && tmp->n <= 127))
 	{
-		printf("%c", temp->n);
-		temp = temp->next;
+		printf("%c", tmp->n);
+		tmp = tmp->next;
 	}
 
 	printf("\n");
 
-	(void)no_line;
+	(void)line_number;
 }

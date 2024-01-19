@@ -1,38 +1,38 @@
 #include "monty.h"
 #include <string.h>
 
-void clear_token(void);
-unsigned int tkn_len(void);
+void free_tokens(void);
+unsigned int token_arr_len(void);
 int is_empty_line(char *line, char *delims);
 void (*get_op_func(char *opcode))(stack_t**, unsigned int);
-int init_monty(FILE *script_fd);
+int run_monty(FILE *script_fd);
 
 /**
- * clear_token - Frees the global ops_token array of strings.
+ * free_tokens - Frees the global op_toks array of strings.
  */
-void clear_token(void)
+void free_tokens(void)
 {
 	size_t i = 0;
 
-	if (ops_token == NULL)
+	if (op_toks == NULL)
 		return;
 
-	for (i = 0; ops_token[i]; i++)
-		free(ops_token[i]);
+	for (i = 0; op_toks[i]; i++)
+		free(op_toks[i]);
 
-	free(ops_token);
+	free(op_toks);
 }
 
 /**
- * tkn_len - Gets the length of current ops_token.
+ * token_arr_len - Gets the length of current op_toks.
  *
- * Return: Length of current ops_token (as int).
+ * Return: Length of current op_toks (as int).
  */
-unsigned int tkn_len(void)
+unsigned int token_arr_len(void)
 {
 	unsigned int toks_len = 0;
 
-	while (ops_token[toks_len])
+	while (op_toks[toks_len])
 		toks_len++;
 	return (toks_len);
 }
@@ -72,23 +72,23 @@ int is_empty_line(char *line, char *delims)
 void (*get_op_func(char *opcode))(stack_t**, unsigned int)
 {
 	instruction_t op_funcs[] = {
-		{"push", pushf},
-		{"pall", pallf},
-		{"pint", pinf},
-		{"pop", popf},
-		{"swap", swapf},
-		{"add", addf},
-		{"nop", nopf},
-		{"sub", subf},
-		{"div", divf},
-		{"mul", mulf},
-		{"mod", my_modf},
-		{"pchar", pchaf},
-		{"pstr", pstrf},
-		{"rotl", rot1f},
-		{"rotr", rotf},
-		{"stack", stackf},
-		{"queue", queuef},
+		{"push", monty_push},
+		{"pall", monty_pall},
+		{"pint", monty_pint},
+		{"pop", monty_pop},
+		{"swap", monty_swap},
+		{"add", monty_add},
+		{"nop", monty_nop},
+		{"sub", monty_sub},
+		{"div", monty_div},
+		{"mul", monty_mul},
+		{"mod", monty_mod},
+		{"pchar", monty_pchar},
+		{"pstr", monty_pstr},
+		{"rotl", monty_rotl},
+		{"rotr", monty_rotr},
+		{"stack", monty_stack},
+		{"queue", monty_queue},
 		{NULL, NULL}
 	};
 	int i;
@@ -103,65 +103,65 @@ void (*get_op_func(char *opcode))(stack_t**, unsigned int)
 }
 
 /**
- * init_monty - Primary function to execute a Monty bytecodes script.
+ * run_monty - Primary function to execute a Monty bytecodes script.
  * @script_fd: File descriptor for an open Monty bytecodes script.
  *
  * Return: EXIT_SUCCESS on success, respective error code on failure.
  */
-int init_monty(FILE *script_fd)
+int run_monty(FILE *script_fd)
 {
 	stack_t *stack = NULL;
 	char *line = NULL;
 	size_t len = 0, exit_status = EXIT_SUCCESS;
-	unsigned int no_line = 0, prev_tok_len = 0;
+	unsigned int line_number = 0, prev_tok_len = 0;
 	void (*op_func)(stack_t**, unsigned int);
 
-	if (start_stack(&stack) == EXIT_FAILURE)
+	if (init_stack(&stack) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 
 	while (getline(&line, &len, script_fd) != -1)
 	{
-		no_line++;
-		ops_token = strtow(line, DELIMS);
-		if (ops_token == NULL)
+		line_number++;
+		op_toks = strtow(line, DELIMS);
+		if (op_toks == NULL)
 		{
 			if (is_empty_line(line, DELIMS))
 				continue;
-			clearStack(&stack);
-			return (malloc_issue());
+			free_stack(&stack);
+			return (malloc_error());
 		}
-		else if (ops_token[0][0] == '#') /* comment line */
+		else if (op_toks[0][0] == '#') /* comment line */
 		{
-			clear_token();
+			free_tokens();
 			continue;
 		}
-		op_func = get_op_func(ops_token[0]);
+		op_func = get_op_func(op_toks[0]);
 		if (op_func == NULL)
 		{
-			clearStack(&stack);
-			exit_status = op_unknown(ops_token[0], no_line);
-			clear_token();
+			free_stack(&stack);
+			exit_status = unknown_op_error(op_toks[0], line_number);
+			free_tokens();
 			break;
 		}
-		prev_tok_len = tkn_len();
-		op_func(&stack, no_line);
-		if (tkn_len() != prev_tok_len)
+		prev_tok_len = token_arr_len();
+		op_func(&stack, line_number);
+		if (token_arr_len() != prev_tok_len)
 		{
-			if (ops_token && ops_token[prev_tok_len])
-				exit_status = atoi(ops_token[prev_tok_len]);
+			if (op_toks && op_toks[prev_tok_len])
+				exit_status = atoi(op_toks[prev_tok_len]);
 			else
 				exit_status = EXIT_FAILURE;
-			clear_token();
+			free_tokens();
 			break;
 		}
-		clear_token();
+		free_tokens();
 	}
-	clearStack(&stack);
+	free_stack(&stack);
 
 	if (line && *line == 0)
 	{
 		free(line);
-		return (malloc_issue());
+		return (malloc_error());
 	}
 
 	free(line);

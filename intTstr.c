@@ -4,7 +4,7 @@ char *get_int(int num);
 unsigned int _abs(int);
 int get_numbase_len(unsigned int num, unsigned int base);
 void fill_numbase_buff(unsigned int num, unsigned int base,
-		       char *buff, int buffer_sz);
+		       char *buff, int buff_size);
 
 /**
  * get_int - gets a character pointer to new string containing int
@@ -15,21 +15,21 @@ void fill_numbase_buff(unsigned int num, unsigned int base,
 char *get_int(int num)
 {
 	unsigned int temp;
-	int len = 0;
-	long no_l = 0;
+	int length = 0;
+	long num_l = 0;
 	char *ret;
 
 	temp = _abs(num);
-	len = get_numbase_len(temp, 10);
+	length = get_numbase_len(temp, 10);
 
-	if (num < 0 || no_l < 0)
-		len++; /* negative sign */
-	ret = malloc(len + 1); /* create new string */
+	if (num < 0 || num_l < 0)
+		length++; /* negative sign */
+	ret = malloc(length + 1); /* create new string */
 	if (!ret)
 		return (NULL);
 
-	fill_numbase_buff(temp, 10, ret, len);
-	if (num < 0 || no_l < 0)
+	fill_numbase_buff(temp, 10, ret, length);
+	if (num < 0 || num_l < 0)
 		ret[0] = '-';
 
 	return (ret);
@@ -49,11 +49,11 @@ unsigned int _abs(int i)
 }
 
 /**
- * get_numbase_len - gets len of buffer needed for an unsigned int
- * @num: number to get len needed for
+ * get_numbase_len - gets length of buffer needed for an unsigned int
+ * @num: number to get length needed for
  * @base: base of number representation used by buffer
  *
- * Return: integer containing len of buffer needed (doesn't contain null bt)
+ * Return: integer containing length of buffer needed (doesn't contain null bt)
  */
 int get_numbase_len(unsigned int num, unsigned int base)
 {
@@ -72,16 +72,16 @@ int get_numbase_len(unsigned int num, unsigned int base)
  * @num: number to convert to string given base
  * @base: base of number used in conversion, only works up to base 36
  * @buff: buffer to fill with result of conversion
- * @buffer_sz: size of buffer in bytes
+ * @buff_size: size of buffer in bytes
  *
  * Return: always void.
  */
 void fill_numbase_buff(unsigned int num, unsigned int base,
-			char *buff, int buffer_sz)
+			char *buff, int buff_size)
 {
-	int rem, i = buffer_sz - 1;
+	int rem, i = buff_size - 1;
 
-	buff[buffer_sz] = '\0';
+	buff[buff_size] = '\0';
 	while (i >= 0)
 	{
 		rem = num % base;
