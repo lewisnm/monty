@@ -1,54 +1,54 @@
 #include "monty.h"
 #include <string.h>
 
-void clearStack(stack_t **stack);
-int start_stack(stack_t **stack);
-int modeCheck(stack_t *stack);
+void free_stack(stack_t **stack);
+int init_stack(stack_t **stack);
+int check_mode(stack_t *stack);
 
 /**
- * clearStack - Frees a stack_t stack.
+ * free_stack - Frees a stack_t stack.
  * @stack: A pointer to the top (stack) or
  *         bottom (queue) of a stack_t.
  */
-void clearStack(stack_t **stack)
+void free_stack(stack_t **stack)
 {
-	stack_t *temp = *stack;
+	stack_t *tmp = *stack;
 
 	while (*stack)
 	{
-		temp = (*stack)->next;
+		tmp = (*stack)->next;
 		free(*stack);
-		*stack = temp;
+		*stack = tmp;
 	}
 }
 
 /**
- * start_stack - Initializes a stack_t stack with beginning
+ * init_stack - Initializes a stack_t stack with beginning
  *              stack and ending queue nodes.
  * @stack: A pointer to an unitialized stack_t stack.
  *
  * Return: If an error occurs - EXIT_FAILURE.
  *         Otherwise - EXIT_SUCCESS.
  */
-int start_stack(stack_t **stack)
+int init_stack(stack_t **stack)
 {
-	stack_t *k;
+	stack_t *s;
 
-	k = malloc(sizeof(stack_t));
-	if (k == NULL)
-		return (malloc_issue());
+	s = malloc(sizeof(stack_t));
+	if (s == NULL)
+		return (malloc_error());
 
-	k->n = STACK;
-	k->prev = NULL;
-	k->next = NULL;
+	s->n = STACK;
+	s->prev = NULL;
+	s->next = NULL;
 
-	*stack = k;
+	*stack = s;
 
 	return (EXIT_SUCCESS);
 }
 
 /**
- * modeCheck - Checks if a stack_t linked list is in stack or queue mode.
+ * check_mode - Checks if a stack_t linked list is in stack or queue mode.
  * @stack: A pointer to the top (stack) or bottom (queue)
  *         of a stack_t linked list.
  *
@@ -56,7 +56,7 @@ int start_stack(stack_t **stack)
  *         If the stack_t is in queue mode - QUEUE (1).
  *         Otherwise - 2.
  */
-int modeCheck(stack_t *stack)
+int check_mode(stack_t *stack)
 {
 	if (stack->n == STACK)
 		return (STACK);
