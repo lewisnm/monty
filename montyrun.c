@@ -1,4 +1,5 @@
 #include "monty.h"
+#include <string.h>
 
 void clear_token(void);
 unsigned int tkn_len(void);
